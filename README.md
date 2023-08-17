@@ -95,7 +95,7 @@ Add a step like this to your workflow:
 Action will generate `output_file` based on inputs. Using other actions you can:
 - directly [push](#push-into-repository) into repository,
 - create [pull request](#create-pull-request),
-- or even add comment to [issue](#trigger-on-issue-change).
+- or add comment to [issue](#trigger-on-issue-change).
 
 ### High Level Security and Privacy Requirements
 
