@@ -32,9 +32,9 @@ Table of content
 
 | Feature | Model | Input | Output | 
 | --- | --- | --- | --- |
-| High Level Security and Privacy Requirements | OpenAI GPT-3.5 | [PROJECT.md](https://github.com/xvnpw/ai-nutrition-pro-design-gpt3.5/blob/main/PROJECT.md) | [PROJECT_SECURITY.md](https://github.com/xvnpw/ai-nutrition-pro-design-gpt3.5/blob/main/PROJECT_SECURITY.md) or as [pull request](https://github.com/xvnpw/ai-nutrition-pro-design-gpt3.5/pull/7) |
+| High Level Security and Privacy Requirements | OpenAI GPT-3.5 | [PROJECT.md](https://github.com/xvnpw/ai-nutrition-pro-design-gpt3.5/blob/main/PROJECT.md) | [PROJECT_SECURITY.md](https://github.com/xvnpw/ai-nutrition-pro-design-gpt3.5/blob/main/PROJECT_SECURITY.md) or as [pull request](https://github.com/xvnpw/ai-nutrition-pro-design-gpt3.5/pull/2) |
 | Threat Model of Architecture | OpenAI GPT-3.5 | [ARCHITECTURE.md](https://github.com/xvnpw/ai-nutrition-pro-design-gpt3.5/blob/main/ARCHITECTURE.md) | [ARCHITECTURE_SECURITY.md](https://github.com/xvnpw/ai-nutrition-pro-design-gpt3.5/blob/main/ARCHITECTURE_SECURITY.md) |
-| Security Acceptance Criteria for User Story | OpenAI GPT-3.5 | [0001_STORE_DIET_INTRODUCTIONS.md](https://github.com/xvnpw/ai-nutrition-pro-design-gpt3.5/blob/main/user-stories/0001_STORE_DIET_INTRODUCTIONS.md) or [issue](https://github.com/xvnpw/ai-nutrition-pro-design-gpt3.5/issues/4) | [0001_STORE_DIET_INTRODUCTIONS_SECURITY.md](https://github.com/xvnpw/ai-nutrition-pro-design-gpt3.5/blob/main/user-stories/0001_STORE_DIET_INTRODUCTIONS_SECURITY.md) or as [issue comment](https://github.com/xvnpw/ai-nutrition-pro-design-gpt3.5/issues/4#issuecomment-1680209305) |
+| Security Acceptance Criteria for User Story | OpenAI GPT-3.5 | [0001_STORE_DIET_INTRODUCTIONS.md](https://github.com/xvnpw/ai-nutrition-pro-design-gpt3.5/blob/main/user-stories/0001_STORE_DIET_INTRODUCTIONS.md) or [issue](https://github.com/xvnpw/ai-nutrition-pro-design-gpt3.5/issues/1) | [0001_STORE_DIET_INTRODUCTIONS_SECURITY.md](https://github.com/xvnpw/ai-nutrition-pro-design-gpt3.5/blob/main/user-stories/0001_STORE_DIET_INTRODUCTIONS_SECURITY.md) or as [issue comment](https://github.com/xvnpw/ai-nutrition-pro-design-gpt3.5/issues/1#issuecomment-1682598670) |
 
 ## Inputs
 
