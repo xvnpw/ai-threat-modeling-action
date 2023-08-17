@@ -1,6 +1,10 @@
 # action.yml
 name: 'AI Threat Modeling'
 description: 'AI featured threat modeling and security review action'
+author: 'xvnpw'
+branding:
+  icon: 'book-open'
+  color: 'green'
 inputs:
   type: 
     description: 'type of feature' # one of: project, architecture, user-story, user-story-issue
