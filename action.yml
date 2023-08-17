@@ -1,0 +1,58 @@
+# action.yml
+name: 'AI Threat Modeling'
+description: 'AI featured threat modeling and security review action'
+inputs:
+  type: 
+    description: 'type of feature' # one of: project, architecture, user-story, user-story-issue
+    required: true
+    default: ''
+  input_files:
+    description: 'paths to input files formatted as json array' # e.g. ["user-stories/0001_STORE_DIET_INTRODUCTIONS.md","user-stories/0002_XYZ.md"]
+    required: false
+    default: ''
+  output_file:
+    description: 'path to output file' # e.g. architecture_threat_model.md
+    required: false
+    default: ''
+  input_architecture_files:
+    description: 'for user-story only: json array of paths of input architecture files' # e.g. ["arch-1.md","arch-2.md","arch_security.md"]
+    required: false
+    default: ''
+  input_architecture_threat_model_file:
+    description: 'for user-story only: path to architecture threat model' # e.g. ARCHITECTURE_SECURITY.md
+    required: false
+    default: ''
+  model:
+    description: 'type of GPT model'
+    required: false
+    default: 'gpt-3.5-turbo'
+  temperature:
+    description: 'sampling temperature for a model'
+    required: false
+    default: 0
+  verbose:
+    description: 'verbose messages'
+    required: false
+    default: false
+  debug:
+    description: 'debug messages'
+    required: false
+    default: false
+  user_story_output_suffix:
+    description: 'for user-story only: suffix that will be added to input file name to create output file' # e.g. _SECURITY
+    required: false
+    default: '_SECURITY'
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - ${{ inputs.type }}
+    - ${{ inputs.input_files }}
+    - ${{ inputs.output_file }}
+    - ${{ inputs.input_architecture_files }}
+    - ${{ inputs.input_architecture_threat_model_file }}
+    - ${{ inputs.model }}
+    - ${{ inputs.temperature }}
+    - ${{ inputs.verbose }}
+    - ${{ inputs.debug }}
+    - ${{ inputs.user_story_output_suffix }}
