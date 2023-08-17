@@ -19,7 +19,7 @@ def analyze_architecture(args, inputs: Path, output: Path):
     data_flows = _list_data_flow_for_architecture(args, docs_all)
     
     prompt_template = """Instruction:
-- You are an security architect
+- You are a security architect
 - I will provide you Architecture description
 - Perform threat modelling using STRIDE per component technique for data flow
 - I will provide you data flow in structure: Data flow 1: Component A -> Component B
@@ -71,7 +71,7 @@ Data flow:
 def _list_data_flow_for_architecture(args, docs_all) -> str:
     # Define prompt
     prompt_template = """Instruction:
-- You are an security architect
+- You are a security architect
 - List data flows for all components that are internal and important for security of system
 - You should not include any persons in data flows
 - You should answer only in list and nothing more. Each data flow should be in separated line

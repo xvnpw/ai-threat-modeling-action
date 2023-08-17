@@ -18,7 +18,7 @@ def analyze_project(args, inputs: [Path], output: Path):
     
     # Define prompt
     prompt_template = """Instruction:
-- You are an security architect.
+- You are a security architect.
 - Your task is to analyze project description and create high level security and privacy requirements
 - Project description will be in markdown format
 - Format output as markdown
