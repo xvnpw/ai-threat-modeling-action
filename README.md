@@ -88,7 +88,7 @@ Add a step like this to your workflow:
     # Prompt templates directory
     # Default: '/app/templates'
     # By default action will use prompt templates build-in docker image. You can specify your own without forking action.
-    templates_dir: '${{ github.workspace }}/templates'
+    templates_dir: './templates'
   env:
     # OpenAI API key
     # Get a key from https://platform.openai.com/account/api-keys
