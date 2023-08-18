@@ -18,31 +18,8 @@ def analyze_architecture(args, inputs: Path, output: Path):
     
     data_flows = _list_data_flow_for_architecture(args, docs_all)
     
-    prompt_template = """Instruction:
-- You are a security architect
-- I will provide you Architecture description
-- Perform threat modelling using STRIDE per component technique for data flow
-- I will provide you data flow in structure: Data flow 1: Component A -> Component B
-- You should answer only in table and nothing more
-- Architecture description will be in markdown format
-- Format output as markdown
-
-Output of threat modelling should be in table as in example:
-### Data flow 1: Component A -> Component B
-| Threat Id | Component name | Threat Name | STRIDE category | Mitigations | Risk severity |
-| --- | --- | --- | --- | --- | --- |
-| 1 | Component A | Attacker is able to spoof client using leaked API key | Spoofing | Invalidation of API keys. Usage of request signing technique | Critical |
-
-Architecture description:
-"{text}"
-
-Data flow:
-"{dataflow}"
-"""
-    prompt = PromptTemplate(
-        template=prompt_template,
-        input_variables=["text", "dataflow"]
-    )
+    prompt = PromptTemplate.from_file(template_file=f"{args.template_dir}/arch_threat_model_tpl.txt", 
+        input_variables=["text", "dataflow"])
     
     # Define LLM chain
     logging.debug(f'using temperature={args.temperature} and model={args.model}')
@@ -69,23 +46,8 @@ Data flow:
     logging.info("response written to file")
     
 def _list_data_flow_for_architecture(args, docs_all) -> str:
-    # Define prompt
-    prompt_template = """Instruction:
-- You are a security architect
-- List data flows for all components that are internal and important for security of system
-- You should not include any persons in data flows
-- You should answer only in list and nothing more. Each data flow should be in separated line
-- Architecture description will be in markdown format
-
-Example:
-Data flow 1: Client -> API Gateway 
-Data flow 2: API Gateway -> API Application
-Data flow 3: API Application -> API Database
-
-Architecture description:
-"{text}"
-"""
-    prompt = PromptTemplate.from_template(prompt_template)
+    prompt = PromptTemplate.from_file(template_file=f"{args.template_dir}/arch_data_flows_tpl.txt", 
+        input_variables=["text"])
 
     # Define LLM chain
     logging.debug(f'using temperature={args.temperature} and model={args.model}')

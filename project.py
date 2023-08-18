@@ -16,24 +16,8 @@ def analyze_project(args, inputs: [Path], output: Path):
     docs = [loader.load() for loader in loaders]
     docs_all = (elem for iterable in docs for elem in iterable)
     
-    # Define prompt
-    prompt_template = """Instruction:
-- You are a security architect.
-- Your task is to analyze project description and create high level security and privacy requirements
-- Project description will be in markdown format
-- Format output as markdown
-- Response with at least 10 high level security and privacy requirements formatted as markdown and nothing else
-- I will provide you example of requirement
-
-Example of requirement:
-### 1. Authentication and Authorization
-- **Requirement**: Implement strong authentication mechanisms for all users, applications, and APIs accessing AI Nutrition-Pro.
-- **Description**: Utilize secure authentication protocols such as OAuth 2.0 or JWT to authenticate and authorize tenants, dietitians, and other users. Different levels of access should be granted based on roles and responsibilities.
-
-Project description:
-"{text}"
-"""
-    prompt = PromptTemplate.from_template(prompt_template)
+    prompt = PromptTemplate.from_file(template_file=f"{args.template_dir}/project_tpl.txt", 
+        input_variables=["text"])
 
     # Define LLM chain
     logging.debug(f'using temperature={args.temperature} and model={args.model}')

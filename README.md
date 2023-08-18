@@ -23,6 +23,7 @@ Table of content
      * [Trigger on issue change](#trigger-on-issue-change)
   * [Push into Repository](#push-into-repository)
   * [Create Pull Request](#create-pull-request)
+  * [Custom Prompts](#custom-prompts)
 * [Roadmap](#-roadmap)
 * [Tech Stack](#-tech-stack)
 * [Fork](#fork)
@@ -83,6 +84,11 @@ Add a step like this to your workflow:
     # Debug log messages
     # Default: false
     debug: true
+
+    # Prompt templates directory
+    # Default: '/app/templates'
+    # By default action will use prompt templates build-in docker image. You can specify your own without forking action.
+    templates_dir: '${{ github.workspace }}/templates'
   env:
     # OpenAI API key
     # Get a key from https://platform.openai.com/account/api-keys
@@ -408,6 +414,27 @@ In this mode, you also need to adjust permissions for workflow:
 ```
 
 Also [change settings](https://github.com/marketplace/actions/create-pull-request#workflow-permissions) for actions.
+
+### Custom Prompts
+
+You might want to tune prompts. To do so, you don't need to fork action, but provide templates directory into your target repository:
+
+```bash
+cd $HOME/<projects> # your directory with repositories
+git clone git@github.com:xvnpw/ai-threat-modeling-action.git
+cp -r ai-threat-modeling-action/templates <target-repo>/
+cd <target-repo>/templates
+# edit templates
+```
+
+In workflow file add:
+
+```yaml
+uses: xvnpw/ai-threat-modeling-action@v1.0.1
+with:
+  ...
+  templates_dir: '${{ github.workspace }}/templates'
+```
 
 ## 🎉 Roadmap
 

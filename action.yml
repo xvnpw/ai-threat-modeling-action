@@ -46,6 +46,10 @@ inputs:
     description: 'for user-story only: suffix that will be added to input file name to create output file' # e.g. _SECURITY
     required: false
     default: '_SECURITY'
+  templates_dir:
+    description: 'prompt templates directory' # e.g. '${{ github.workspace }}/templates'
+    required: false
+    default: '/app/templates' # build-in templates from docker image
 runs:
   using: 'docker'
   image: 'Dockerfile'
@@ -60,3 +64,4 @@ runs:
     - ${{ inputs.verbose }}
     - ${{ inputs.debug }}
     - ${{ inputs.user_story_output_suffix }}
+    - ${{ inputs.templates_dir }}

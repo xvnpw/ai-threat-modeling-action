@@ -5,8 +5,8 @@ from langchain.prompts import load_prompt
 from langchain.prompts.chat import (
     ChatPromptTemplate,
     HumanMessagePromptTemplate,
+    AIMessagePromptTemplate,
 )
-from langchain.schema.messages import AIMessage
 from langchain.callbacks import get_openai_callback
 from langchain.prompts import PromptTemplate
 from langchain.chains.combine_documents.stuff import StuffDocumentsChain
@@ -34,20 +34,11 @@ def analyze_user_story(args, input: Path, architecture_inputs: [Path], architect
         
     chat_prompt_template = ChatPromptTemplate.from_messages([
         HumanMessagePromptTemplate(prompt=load_prompt(f"{args.template_dir}/user_story_intro_tpl.yaml")),
-        AIMessage(content="""Sure, I understand your instructions. Please provide me with the user story, 
-                architecture description, and architecture threat model documents in markdown format one 
-                by one, and I'll be ready to analyze them and provide you with the most important security-related 
-                acceptance criteria for the user story.""", additional_kwargs={}),
+        AIMessagePromptTemplate.from_template_file(template_file=f"{args.template_dir}/user_story_ai_confirmation_step1_tpl.txt", input_variables=[]),
         HumanMessagePromptTemplate(prompt=load_prompt(f"{args.template_dir}/user_story_doc_tpl.yaml")),
-        AIMessage(content="""Thank you for providing the user story. Please proceed to provide me with 
-                  the "Architecture Description" document in markdown format, and I'll analyze it next. 
-                  Once I have all the relevant information, I'll be able to list the most important security-related 
-                  acceptance criteria for the user story.""", additional_kwargs={}),
+        AIMessagePromptTemplate.from_template_file(template_file=f"{args.template_dir}/user_story_ai_confirmation_step2_tpl.txt", input_variables=[]),
         HumanMessagePromptTemplate(prompt=load_prompt(f"{args.template_dir}/user_story_arch_doc_tpl.yaml")),
-        AIMessage(content="""Thank you for providing the "Architecture Description" document. Please 
-                  proceed to provide me with the "Architecture Threat Model" document in markdown format, 
-                  and I'll analyze it next. Once I have all the relevant information, I'll be able to list 
-                  the most important security-related acceptance criteria for the user story.""", additional_kwargs={}),
+        AIMessagePromptTemplate.from_template_file(template_file=f"{args.template_dir}/user_story_ai_confirmation_step3_tpl.txt", input_variables=[]),
         HumanMessagePromptTemplate(prompt=load_prompt(f"{args.template_dir}/user_story_arch_tm_doc_tpl.yaml")),
     ])
 
@@ -75,14 +66,8 @@ def analyze_user_story(args, input: Path, architecture_inputs: [Path], architect
     
 def _list_components_for_user_story(args, user_story_doc) -> str:
     # Define prompt
-    prompt_template = """You are solution architect. I will provide you User Story and you will list all 
-architecture containers, services or applications included in architecture. Answer only with list, 
-each entry in one line and nothing more.
-
-User Story:
-"{text}"
-"""
-    prompt = PromptTemplate.from_template(prompt_template)
+    prompt = PromptTemplate.from_file(template_file=f"{args.template_dir}/user_story_arch_components_tpl.txt", 
+        input_variables=["text"])
 
     # Define LLM chain
     logging.debug(f'using temperature={args.temperature} and model={args.model}')
