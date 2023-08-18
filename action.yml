@@ -47,7 +47,7 @@ inputs:
     required: false
     default: '_SECURITY'
   templates_dir:
-    description: 'prompt templates directory' # e.g. '${{ github.workspace }}/templates'
+    description: 'prompt templates directory' # e.g. './templates'
     required: false
     default: '/app/templates' # build-in templates from docker image
 runs:
