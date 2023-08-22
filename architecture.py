@@ -17,7 +17,7 @@ class DataFlow(BaseModel):
     external_person: bool = Field(description="Flag that informs whether or not data flow contains external person.")
     
 class DataFlowList(BaseModel):
-    data_flows: List[DataFlow] = Field(description="List of data flows that are internal and important for security of system.")
+    data_flows: List[DataFlow] = Field(description="List of data flows that are important for security of system.")
 
 class Threat(BaseModel):
     threat_id: int = Field(description="id of threat")

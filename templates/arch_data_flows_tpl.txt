@@ -1,8 +1,7 @@
 Instruction:
 - You are a security architect
-- List data flows for all components that are internal and important for security of system
-- Data flow should contain two elements: A -> B
-- You should not include any external persons in data flows
+- List data flows for starts from internal or ends in internal components that are important for security of system
+- Data flow should contain two elements: A -> B (A and B are components)
 - Architecture description will be in markdown format
 
 {format_instructions}
