@@ -13,23 +13,23 @@ from typing import List
 from pydantic import BaseModel, Field
 
 class DataFlow(BaseModel):
-    data_flow: str = Field(description="Name of data flow, eg. Data flow 1: Client -> Component A, Data flow 2: Component A -> Component B")
+    data_flow: str = Field(description="Name of data flow, e.g. Data flow 1: Client -> Component A, Data flow 2: Component A -> Component B")
     
 class DataFlowList(BaseModel):
     data_flows: List[DataFlow] = Field(description="List of data flows that are internal and important for security of system. List don't include data flows origin from persons.")
 
 class Threat(BaseModel):
     threat_id: int = Field(description="id of threat")
-    component_name: str = Field(description="name of architecture containers, services or applications")
+    component_name: str = Field(description="Name of component, example: Service A, API Gateway, Database B, Microservice X, Queue Z")
     threat_name: str = Field(description="Name of threat. Should be detailed and specific, e.g. Attacker bypasses weak authentication and gains unauthorized access to Component A")
-    stride_category: str = Field(description="STRIDE category (eg. Spoofing)")
+    stride_category: str = Field(description="STRIDE category (e.g. Spoofing)")
     applicability_explanation: str = Field(description="Explanation whether or not this threat is already mitigated in architecture")
     mitigation: str = Field(description="Mitigation that can be applied for this threat. Detailed and related to context")
     risk_severity: str = Field(description="Risk severity")
     
 class ThreatList(BaseModel):
-    data_flow: str = Field(description="Name of data flow")
-    threats: List[Threat] = Field(description="list of threats for data flow")
+    data_flow: str = Field(description="Name of data flow, e.g. Data flow 1: Client -> Component A, Data flow 2: Component A -> Component B")
+    threats: List[Threat] = Field(description="list of threats applicable for data flow")
 
 def analyze_architecture(args, inputs: Path, output: Path):
     logging.info("analyze of architecture started...")

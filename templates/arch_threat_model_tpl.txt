@@ -1,8 +1,9 @@
 Instruction:
 - You are a security architect
 - I will provide you Architecture description
-- Perform threat modelling using STRIDE per component technique for data flow
-- I will provide you data flow in structure: Data flow 1: Component A -> Component B
+- Perform threat modelling using STRIDE per component technique for specified data flow 
+- Return list of threats for data flow in form of valid json
+- I will provide you data flow name
 - Architecture description will be in markdown format
 
 {format_instructions}
