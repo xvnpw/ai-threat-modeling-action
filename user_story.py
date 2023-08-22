@@ -10,9 +10,21 @@ from langchain.prompts.chat import (
 from langchain.callbacks import get_openai_callback
 from langchain.prompts import PromptTemplate
 from langchain.chains.combine_documents.stuff import StuffDocumentsChain
+from langchain.output_parsers import PydanticOutputParser
 
 import logging
 from pathlib import Path
+
+from typing import List
+from pydantic import BaseModel, Field
+
+
+class Component(BaseModel):
+    component_name: str = Field(description="Name of component, example: Service A, API Gateway, Database B, Microservice X, Queue Z")
+    component_scope: str = Field(description="Explanation why component is included in scope of this user story")
+    
+class ComponentList(BaseModel):
+    components: List[Component] = Field(description="List of components that are internal and important for security of system. List don't include persons and external components.")
 
 def analyze_user_story(args, input: Path, architecture_inputs: [Path], architecture_tm_input: Path, output: Path):
     logging.info("user story content generation started...")
@@ -51,7 +63,7 @@ def analyze_user_story(args, input: Path, architecture_inputs: [Path], architect
         architecture_docs_loaded = "\n\n".join([str(d.page_content) for d in architecture_docs_all])
         
         ret = llm_chain.run(user_story_doc=str(user_story_doc[0].page_content), 
-            components=components_for_user_story,
+            components="\n".join(components_for_user_story),
             arch_doc=architecture_docs_loaded,
             arch_tm_doc=str(architecture_tm_doc[0].page_content))
         logging.debug(cb)
@@ -65,9 +77,12 @@ def analyze_user_story(args, input: Path, architecture_inputs: [Path], architect
     logging.info("response written to file")
     
 def _list_components_for_user_story(args, user_story_doc) -> str:
+    parser = PydanticOutputParser(pydantic_object=ComponentList)
+    
     # Define prompt
     prompt = PromptTemplate.from_file(template_file=f"{args.template_dir}/user_story_arch_components_tpl.txt", 
-        input_variables=["text"])
+        input_variables=["text"],
+        partial_variables={"format_instructions": parser.get_format_instructions()})
 
     # Define LLM chain
     logging.debug(f'using temperature={args.temperature} and model={args.model}')
@@ -82,8 +97,10 @@ def _list_components_for_user_story(args, user_story_doc) -> str:
     with get_openai_callback() as cb:
         ret = stuff_chain.run(user_story_doc)
         logging.debug(cb)
-    parsedOutput = ret.strip().split("\n")
+    gen_components = parser.parse(ret)
     logging.info("finished waiting on chatgpt response - components")
-    logging.debug(f"got following components: {parsedOutput}")
+    logging.debug(f"got following components: {gen_components}")
+    
+    gen_components = [c.component_name for c in gen_components.components]
            
-    return ret
+    return gen_components
