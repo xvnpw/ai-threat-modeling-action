@@ -13,7 +13,7 @@ from typing import List
 from pydantic import BaseModel, Field
 
 class DataFlow(BaseModel):
-    data_flow: str = Field(description="Name of data flow, eg. Data flow 1: Client -> Component A")
+    data_flow: str = Field(description="Name of data flow, eg. Data flow 1: Client -> Component A, Data flow 2: Component A -> Component B")
     
 class DataFlowList(BaseModel):
     data_flows: List[DataFlow] = Field(description="List of data flows that are internal and important for security of system. List don't include data flows origin from persons.")
