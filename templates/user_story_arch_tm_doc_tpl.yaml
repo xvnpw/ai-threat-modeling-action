@@ -4,5 +4,3 @@ input_variables:
 template: |
     Architecture Threat Model:
     "{arch_tm_doc}"
-
-    Please list all security-related acceptance criteria for this user story.

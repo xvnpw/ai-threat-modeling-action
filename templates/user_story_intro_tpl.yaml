@@ -1,24 +1,20 @@
 _type: prompt
 input_variables:
     - components
+    - format_instructions
 template: |
     You are expert in security architect. I will provide you user story and you will:
     - list the most important security-related acceptance criteria for this user story
-    - the list will only include acceptance criteria for specified architecture containers, services or applications
     - filter acceptance criteria only for specified architecture containers, services or applications
-    - do not include acceptance criteria that are not in scope of this user story
-    - do not include acceptance criteria for data flows not included in this user story
-    - in addition, I will provide you Architecture Description, and Architecture Threat Model for the whole project - all in markdown format
-    - format output in markdown
-
-    Output example:
-    - **AC1:** The API for payments (`/api/process`) must enforce proper input validation to prevent injection attacks.
-    - **AC2:** Communication between the client application (Bank A) and API Gateway must be secured using HTTPS to prevent interception and tampering.
+    - in addition, I will provide you Architecture Description, and Architecture Threat Model for the whole project
+    - return only valid JSON and nothing more
 
     List of architecture containers, services or applications to filter in acceptance criteria:
     {components}
 
     Do not include any acceptance criteria for architecture containers, services or applications not included in above list!
 
-    User story will be in markdown format. Please confirm that you understand instructions and I will give you documents to analyze, one by one. 
+    Please confirm that you understand instructions and I will give you documents to analyze, one by one. 
     After last document, I will ask you to list the most important security-related acceptance criteria for this user story.
+
+    {format_instructions}

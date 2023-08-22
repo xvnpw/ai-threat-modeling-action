@@ -18,6 +18,17 @@ from pathlib import Path
 from typing import List
 from pydantic import BaseModel, Field
 
+class AcceptanceCriteria(BaseModel):
+    id: str = Field(description="Id of acceptance criteria, eg. AC1, AC2, AC3")
+    acceptance_criteria: str = Field(description="Value of acceptance criteria. Very specific and detailed, eg: The API for payments (`/api/process`) must enforce proper input validation to prevent injection attacks.")
+    explanation: str = Field(description="Expiation why acceptance criteria is included for particular component for this user story")
+
+class ComponentAcceptanceCriteriaList(BaseModel):
+    component_name: str = Field(description="Name of component, example: Service A, API Gateway, Database B, Microservice X, Queue Z")
+    acceptance_criteria_list: List[AcceptanceCriteria] = Field(description="List of acceptance criteria for this particular component for user story")
+
+class AcceptanceCriteriaList(BaseModel):
+    components: List[ComponentAcceptanceCriteriaList] = Field(description="List of components with acceptance criteria for user story")
 
 class Component(BaseModel):
     component_name: str = Field(description="Name of component, example: Service A, API Gateway, Database B, Microservice X, Queue Z")
@@ -54,6 +65,8 @@ def analyze_user_story(args, input: Path, architecture_inputs: [Path], architect
         HumanMessagePromptTemplate(prompt=load_prompt(f"{args.template_dir}/user_story_arch_tm_doc_tpl.yaml")),
     ])
 
+    parser = PydanticOutputParser(pydantic_object=AcceptanceCriteriaList)
+
     # Define LLM chain
     logging.debug(f'using temperature={args.temperature} and model={args.model}')
     llm = ChatOpenAI(temperature=args.temperature, model_name=args.model)
@@ -65,16 +78,29 @@ def analyze_user_story(args, input: Path, architecture_inputs: [Path], architect
         ret = llm_chain.run(user_story_doc=str(user_story_doc[0].page_content), 
             components="\n".join(components_for_user_story),
             arch_doc=architecture_docs_loaded,
-            arch_tm_doc=str(architecture_tm_doc[0].page_content))
+            arch_tm_doc=str(architecture_tm_doc[0].page_content),
+            format_instructions=parser.get_format_instructions())
         logging.debug(cb)
     
     logging.info("finished waiting on chatgpt response")
     
-    f = open(str(output.resolve()), "w")
-    f.write("# (AI Generated) Security Related Acceptance Criteria\n")
-    f.write(ret)
+    gen_components_all = parser.parse(ret)
+    
+    _processJsonToMarkdownAndSave(gen_components_all.components, output)
+    
+def _processJsonToMarkdownAndSave(gen_components_all : List[ComponentAcceptanceCriteriaList], output):
+    with open(str(output.resolve()), "w") as f:
+        f.write("# (AI Generated) Security Related Acceptance Criteria\n")
+        
+        for component in gen_components_all:
+            f.write(f"**{component.component_name}**\n")
+            
+            for ac in component.acceptance_criteria_list:
+                f.write(f'- **{ac.id}:** {ac.acceptance_criteria}\n')
+            
+            f.write("\n")
     f.close()
-    logging.info("response written to file")
+    logging.info("response written to file")            
     
 def _list_components_for_user_story(args, user_story_doc) -> str:
     parser = PydanticOutputParser(pydantic_object=ComponentList)
