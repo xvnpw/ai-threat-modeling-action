@@ -42,7 +42,7 @@ Table of content
 Add a step like this to your workflow:
 
 ```yaml
-- uses: xvnpw/ai-threat-modeling-action@v1.0.2 # You can change this to use a specific version.
+- uses: xvnpw/ai-threat-modeling-action@v1.1.4 # You can change this to use a specific version.
   with:
     # Type of feature, one of: project, architecture, user-story
     # Default: ''
@@ -144,7 +144,7 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v3
       - name: Generate project security requirements
-        uses: xvnpw/ai-threat-modeling-action@v1.0.2
+        uses: xvnpw/ai-threat-modeling-action@v1.1.4
         with:
           type: 'project'
           input_files: '["PROJECT.md"]'
@@ -191,7 +191,7 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v3
       - name: Generate architecture threat model
-        uses: xvnpw/ai-threat-modeling-action@v1.0.2
+        uses: xvnpw/ai-threat-modeling-action@v1.1.4
         with:
           type: 'architecture'
           input_files: '["ARCHITECTURE.md"]'
@@ -270,7 +270,7 @@ jobs:
         run: |
           echo "${{ steps.files_check.outputs.all }}"
       - name: Generate user story security acceptance criteria
-        uses: xvnpw/ai-threat-modeling-action@v1.0.2
+        uses: xvnpw/ai-threat-modeling-action@v1.1.4
         with:
           type: 'user-story'
           input_files: "${{ steps.files_check.outputs.all }}"
@@ -340,7 +340,7 @@ jobs:
             });
             return JSON.stringify(body);
       - name: Generate user story security acceptance criteria
-        uses: xvnpw/ai-threat-modeling-action@v1.0.2
+        uses: xvnpw/ai-threat-modeling-action@v1.1.4
         with:
           type: 'user-story'
           input_files: '["issue_body.md"]'
@@ -430,7 +430,7 @@ cd <target-repo>/templates
 In workflow file add:
 
 ```yaml
-uses: xvnpw/ai-threat-modeling-action@v1.0.2
+uses: xvnpw/ai-threat-modeling-action@v1.1.4
 with:
   ...
   templates_dir: './templates'
