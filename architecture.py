@@ -4,9 +4,32 @@ from langchain.prompts import PromptTemplate
 from langchain.chains.combine_documents.stuff import StuffDocumentsChain
 from langchain.chat_models import ChatOpenAI
 from langchain.callbacks import get_openai_callback
+from langchain.output_parsers import PydanticOutputParser
 
 import logging
 from pathlib import Path
+
+from typing import List
+from pydantic import BaseModel, Field
+
+class DataFlow(BaseModel):
+    data_flow: str = Field(description="Name of data flow, eg. Data flow 1: Client -> Component A")
+    
+class DataFlowList(BaseModel):
+    data_flows: List[DataFlow] = Field(description="List of data flows that are internal and important for security of system. List don't include data flows origin from persons.")
+
+class Threat(BaseModel):
+    threat_id: int = Field(description="id of threat")
+    component_name: str = Field(description="name of architecture containers, services or applications")
+    threat_name: str = Field(description="Name of threat. Should be detailed and specific, e.g. Attacker bypasses weak authentication and gains unauthorized access to Component A")
+    stride_category: str = Field(description="STRIDE category (eg. Spoofing)")
+    applicability_explanation: str = Field(description="Explanation whether or not this threat is already mitigated in architecture")
+    mitigation: str = Field(description="Mitigation that can be applied for this threat. Detailed and related to context")
+    risk_severity: str = Field(description="Risk severity")
+    
+class ThreatList(BaseModel):
+    data_flow: str = Field(description="Name of data flow")
+    threats: List[Threat] = Field(description="list of threats for data flow")
 
 def analyze_architecture(args, inputs: Path, output: Path):
     logging.info("analyze of architecture started...")
@@ -18,8 +41,11 @@ def analyze_architecture(args, inputs: Path, output: Path):
     
     data_flows = _list_data_flow_for_architecture(args, docs_all)
     
+    parser = PydanticOutputParser(pydantic_object=ThreatList)
+    
     prompt = PromptTemplate.from_file(template_file=f"{args.template_dir}/arch_threat_model_tpl.txt", 
-        input_variables=["text", "dataflow"])
+        input_variables=["text", "dataflow"],
+        partial_variables={"format_instructions": parser.get_format_instructions()})
     
     # Define LLM chain
     logging.debug(f'using temperature={args.temperature} and model={args.model}')
@@ -30,24 +56,24 @@ def analyze_architecture(args, inputs: Path, output: Path):
     stuff_chain = StuffDocumentsChain(
         llm_chain=llm_chain, document_variable_name="text"
     )
-    
-    f = open(str(output.resolve()), "w")
-    f.write("# (AI Generated) Architecture Threat Model\n\n")
-    
+       
+    gen_threats_all = []
     for idx, df in enumerate(data_flows):
         with get_openai_callback() as cb:
             ret = stuff_chain.run(input_documents=docs_all, dataflow=df)
             logging.debug(cb)
         logging.info(f"({idx+1} of {len(data_flows)}) finished waiting on chatgpt response")
-        f.write(ret)
-        f.write("\n\n")
+        gen_threats = parser.parse(ret)
+        gen_threats_all.append(gen_threats)
         
-    f.close()
-    logging.info("response written to file")
+    _processJsonToMarkdownAndSave(gen_threats_all, output)
     
 def _list_data_flow_for_architecture(args, docs_all) -> str:
+    parser = PydanticOutputParser(pydantic_object=DataFlowList)
+    
     prompt = PromptTemplate.from_file(template_file=f"{args.template_dir}/arch_data_flows_tpl.txt", 
-        input_variables=["text"])
+        input_variables=["text"],
+        partial_variables={"format_instructions": parser.get_format_instructions()})
 
     # Define LLM chain
     logging.debug(f'using temperature={args.temperature} and model={args.model}')
@@ -62,8 +88,28 @@ def _list_data_flow_for_architecture(args, docs_all) -> str:
     with get_openai_callback() as cb:
         ret = stuff_chain.run(docs_all)
         logging.debug(cb)
-    parsedOutput = ret.strip().split("\n")
+    gen_data_flows = parser.parse(ret)
     logging.info("finished waiting on chatgpt response - data flows")
-    logging.debug(f"got following data flows: {parsedOutput}")
+    logging.debug(f"got following data flows: {gen_data_flows}")
     
-    return parsedOutput
+    gen_data_flows = [df.data_flow for df in gen_data_flows.data_flows]
+    
+    return gen_data_flows
+
+def _processJsonToMarkdownAndSave(gen_threats_all : List[ThreatList], output):
+    with open(str(output.resolve()), "w") as f:
+        f.write("# (AI Generated) Architecture Threat Model\n\n")
+        
+        for dataflow in gen_threats_all:
+            f.write(f'### {dataflow.data_flow}\n\n')
+            
+            f.write("| Threat Id | Component name | Threat Name | STRIDE category | Explanation | Mitigations | Risk severity |\n")
+            f.write("| --- | --- | --- | --- | --- | --- | --- |\n")
+            
+            for t in dataflow.threats:
+                f.write(f'| {t.threat_id} | {t.component_name} | {t.threat_name} | {t.stride_category} | {t.applicability_explanation} | {t.mitigation} | {t.risk_severity} |\n')
+                
+            f.write("\n\n")
+                
+        f.close()
+        logging.info("response written to file")
