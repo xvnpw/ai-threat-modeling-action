@@ -14,9 +14,10 @@ from pydantic import BaseModel, Field
 
 class DataFlow(BaseModel):
     data_flow: str = Field(description="Name of data flow, e.g. Data flow 1: Client -> Component A, Data flow 2: Component A -> Component B")
+    external_person: bool = Field(description="Flag that informs whether or not data flow contains external person.")
     
 class DataFlowList(BaseModel):
-    data_flows: List[DataFlow] = Field(description="List of data flows that are internal and important for security of system. List don't include data flows origin from persons.")
+    data_flows: List[DataFlow] = Field(description="List of data flows that are internal and important for security of system.")
 
 class Threat(BaseModel):
     threat_id: int = Field(description="id of threat")
