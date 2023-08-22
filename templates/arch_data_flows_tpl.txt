@@ -2,13 +2,9 @@ Instruction:
 - You are a security architect
 - List data flows for all components that are internal and important for security of system
 - You should not include any persons in data flows
-- You should answer only in list and nothing more. Each data flow should be in separated line
 - Architecture description will be in markdown format
 
-Example:
-Data flow 1: Client -> API Gateway 
-Data flow 2: API Gateway -> API Application
-Data flow 3: API Application -> API Database
+{format_instructions}
 
 Architecture description:
 "{text}"
