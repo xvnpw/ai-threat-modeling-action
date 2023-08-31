@@ -2,9 +2,10 @@ from langchain.document_loaders import TextLoader
 from langchain.chains.llm import LLMChain
 from langchain.prompts import PromptTemplate
 from langchain.chains.combine_documents.stuff import StuffDocumentsChain
-from langchain.chat_models import ChatOpenAI
 from langchain.callbacks import get_openai_callback
-from langchain.output_parsers import PydanticOutputParser
+from langchain.output_parsers import PydanticOutputParser, OutputFixingParser
+
+from llms import LLMWrapper
 
 import logging
 from pathlib import Path
@@ -50,7 +51,8 @@ def analyze_architecture(args, inputs: Path, output: Path):
     
     # Define LLM chain
     logging.debug(f'using temperature={args.temperature} and model={args.model}')
-    llm = ChatOpenAI(temperature=args.temperature, model_name=args.model)
+    
+    llm = LLMWrapper(args).create()
     llm_chain = LLMChain(llm=llm, prompt=prompt)
 
     # Define StuffDocumentsChain
@@ -64,7 +66,9 @@ def analyze_architecture(args, inputs: Path, output: Path):
             ret = stuff_chain.run(input_documents=docs_all, dataflow=df)
             logging.debug(cb)
         logging.info(f"({idx+1} of {len(data_flows)}) finished waiting on chatgpt response")
-        gen_threats = parser.parse(ret)
+        
+        fixing_parser = OutputFixingParser.from_llm(parser=parser, llm=llm)
+        gen_threats = fixing_parser.parse(ret)
         gen_threats_all.append(gen_threats)
         
     _processJsonToMarkdownAndSave(gen_threats_all, output)
@@ -78,7 +82,8 @@ def _list_data_flow_for_architecture(args, docs_all) -> str:
 
     # Define LLM chain
     logging.debug(f'using temperature={args.temperature} and model={args.model}')
-    llm = ChatOpenAI(temperature=args.temperature, model_name=args.model)
+    
+    llm = LLMWrapper(args).create()
     llm_chain = LLMChain(llm=llm, prompt=prompt)
 
     # Define StuffDocumentsChain
@@ -89,7 +94,9 @@ def _list_data_flow_for_architecture(args, docs_all) -> str:
     with get_openai_callback() as cb:
         ret = stuff_chain.run(docs_all)
         logging.debug(cb)
-    gen_data_flows = parser.parse(ret)
+        
+    fixing_parser = OutputFixingParser.from_llm(parser=parser, llm=llm)
+    gen_data_flows = fixing_parser.parse(ret)
     logging.info("finished waiting on chatgpt response - data flows")
     logging.debug(f"got following data flows: {gen_data_flows}")
     

@@ -7,9 +7,13 @@ branding:
   color: 'green'
 inputs:
   type: 
-    description: 'type of feature' # one of: project, architecture, user-story, user-story-issue
+    description: 'type of feature' # one of: project, architecture, user-story
     required: true
     default: ''
+  provider:
+    description: 'provider name' # one of: openai, openrouter
+    required: false
+    default: 'openai'
   input_files:
     description: 'paths to input files formatted as json array' # e.g. ["user-stories/0001_STORE_DIET_INTRODUCTIONS.md","user-stories/0002_XYZ.md"]
     required: false
@@ -27,7 +31,7 @@ inputs:
     required: false
     default: ''
   model:
-    description: 'type of GPT model'
+    description: 'type of LLM model' # e.g. gpt-3.5-turbo, anthropic/claude-2
     required: false
     default: 'gpt-3.5-turbo'
   temperature:
@@ -65,3 +69,4 @@ runs:
     - ${{ inputs.debug }}
     - ${{ inputs.user_story_output_suffix }}
     - ${{ inputs.templates_dir }}
+    - ${{ inputs.provider }}

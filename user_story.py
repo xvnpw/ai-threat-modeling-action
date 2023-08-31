@@ -1,6 +1,5 @@
 from langchain.document_loaders import TextLoader
 from langchain.chains.llm import LLMChain
-from langchain.chat_models import ChatOpenAI
 from langchain.prompts import load_prompt
 from langchain.prompts.chat import (
     ChatPromptTemplate,
@@ -10,7 +9,9 @@ from langchain.prompts.chat import (
 from langchain.callbacks import get_openai_callback
 from langchain.prompts import PromptTemplate
 from langchain.chains.combine_documents.stuff import StuffDocumentsChain
-from langchain.output_parsers import PydanticOutputParser
+from langchain.output_parsers import PydanticOutputParser, OutputFixingParser
+
+from llms import LLMWrapper
 
 import logging
 from pathlib import Path
@@ -69,7 +70,7 @@ def analyze_user_story(args, input: Path, architecture_inputs: [Path], architect
 
     # Define LLM chain
     logging.debug(f'using temperature={args.temperature} and model={args.model}')
-    llm = ChatOpenAI(temperature=args.temperature, model_name=args.model)
+    llm = LLMWrapper(args).create()
     llm_chain = LLMChain(llm=llm, prompt=chat_prompt_template)
     
     with get_openai_callback() as cb:
@@ -84,7 +85,8 @@ def analyze_user_story(args, input: Path, architecture_inputs: [Path], architect
     
     logging.info("finished waiting on chatgpt response")
     
-    gen_components_all = parser.parse(ret)
+    fixing_parser = OutputFixingParser.from_llm(parser=parser, llm=llm)
+    gen_components_all = fixing_parser.parse(ret)
     
     _processJsonToMarkdownAndSave(gen_components_all.components, output)
     
@@ -112,7 +114,7 @@ def _list_components_for_user_story(args, user_story_doc) -> str:
 
     # Define LLM chain
     logging.debug(f'using temperature={args.temperature} and model={args.model}')
-    llm = ChatOpenAI(temperature=args.temperature, model_name=args.model)
+    llm = LLMWrapper(args).create()
     llm_chain = LLMChain(llm=llm, prompt=prompt)
 
     # Define StuffDocumentsChain
@@ -123,7 +125,9 @@ def _list_components_for_user_story(args, user_story_doc) -> str:
     with get_openai_callback() as cb:
         ret = stuff_chain.run(user_story_doc)
         logging.debug(cb)
-    gen_components = parser.parse(ret)
+    
+    fixing_parser = OutputFixingParser.from_llm(parser=parser, llm=llm)
+    gen_components = fixing_parser.parse(ret)
     logging.info("finished waiting on chatgpt response - components")
     logging.debug(f"got following components: {gen_components}")
     

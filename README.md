@@ -15,6 +15,7 @@ Table of content
 ===============
 * [Example Outputs](#example-outputs)
 * [Inputs](#inputs)
+* [LLM Providers](#llm-providers)
 * [Usage](#usage)
   * [High Level Security and Privacy Requirements](#high-level-security-and-privacy-requirements)
   * [Architecture Threat Model](#architecture-threat-model)
@@ -28,14 +29,19 @@ Table of content
 * [Tech Stack](#-tech-stack)
 * [Fork](#fork)
 * [Privacy](#privacy)
+  * [OpenAI](#openai)
+  * [OpenRouter](#openrouter)
 
 ## Example Outputs
 
 | Feature | Model | Input | Output | 
 | --- | --- | --- | --- |
-| High Level Security and Privacy Requirements | OpenAI GPT-3.5 | [PROJECT.md](https://github.com/xvnpw/ai-nutrition-pro-design-gpt3.5/blob/main/PROJECT.md) | [PROJECT_SECURITY.md](https://github.com/xvnpw/ai-nutrition-pro-design-gpt3.5/blob/main/PROJECT_SECURITY.md) or as [pull request](https://github.com/xvnpw/ai-nutrition-pro-design-gpt3.5/pull/2) |
-| Threat Model of Architecture | OpenAI GPT-3.5 | [ARCHITECTURE.md](https://github.com/xvnpw/ai-nutrition-pro-design-gpt3.5/blob/main/ARCHITECTURE.md) | [ARCHITECTURE_SECURITY.md](https://github.com/xvnpw/ai-nutrition-pro-design-gpt3.5/blob/main/ARCHITECTURE_SECURITY.md) |
-| Security Acceptance Criteria for User Story | OpenAI GPT-3.5 | [0001_STORE_DIET_INTRODUCTIONS.md](https://github.com/xvnpw/ai-nutrition-pro-design-gpt3.5/blob/main/user-stories/0001_STORE_DIET_INTRODUCTIONS.md) or [issue](https://github.com/xvnpw/ai-nutrition-pro-design-gpt3.5/issues/1) | [0001_STORE_DIET_INTRODUCTIONS_SECURITY.md](https://github.com/xvnpw/ai-nutrition-pro-design-gpt3.5/blob/main/user-stories/0001_STORE_DIET_INTRODUCTIONS_SECURITY.md) or as [issue comment](https://github.com/xvnpw/ai-nutrition-pro-design-gpt3.5/issues/1#issuecomment-1682598670) |
+| High Level Security and Privacy Requirements | **OpenAI GPT-3.5** | [PROJECT.md](https://github.com/xvnpw/ai-nutrition-pro-design-gpt3.5/blob/main/PROJECT.md) | [PROJECT_SECURITY.md](https://github.com/xvnpw/ai-nutrition-pro-design-gpt3.5/blob/main/PROJECT_SECURITY.md) or as [pull request](https://github.com/xvnpw/ai-nutrition-pro-design-gpt3.5/pull/2) |
+| High Level Security and Privacy Requirements | **Anthropic Claude 2** | [PROJECT.md](https://github.com/xvnpw/ai-nutrition-pro-design-claude2/blob/main/PROJECT.md) | [PROJECT_SECURITY.md](https://github.com/xvnpw/ai-nutrition-pro-design-claude2/blob/main/PROJECT_SECURITY.md) or as [pull request](https://github.com/xvnpw/ai-nutrition-pro-design-claude2/pull/2) |
+| Threat Model of Architecture | **OpenAI GPT-3.5** | [ARCHITECTURE.md](https://github.com/xvnpw/ai-nutrition-pro-design-gpt3.5/blob/main/ARCHITECTURE.md) | [ARCHITECTURE_SECURITY.md](https://github.com/xvnpw/ai-nutrition-pro-design-gpt3.5/blob/main/ARCHITECTURE_SECURITY.md) |
+| Threat Model of Architecture | **Anthropic Claude 2** | [ARCHITECTURE.md](https://github.com/xvnpw/ai-nutrition-pro-design-claude2/blob/main/ARCHITECTURE.md) | [ARCHITECTURE_SECURITY.md](https://github.com/xvnpw/ai-nutrition-pro-design-claude2/blob/main/ARCHITECTURE_SECURITY.md) |
+| Security Acceptance Criteria for User Story | **OpenAI GPT-3.5** | [0001_STORE_DIET_INTRODUCTIONS.md](https://github.com/xvnpw/ai-nutrition-pro-design-gpt3.5/blob/main/user-stories/0001_STORE_DIET_INTRODUCTIONS.md) or [issue](https://github.com/xvnpw/ai-nutrition-pro-design-gpt3.5/issues/1) | [0001_STORE_DIET_INTRODUCTIONS_SECURITY.md](https://github.com/xvnpw/ai-nutrition-pro-design-gpt3.5/blob/main/user-stories/0001_STORE_DIET_INTRODUCTIONS_SECURITY.md) or as [issue comment](https://github.com/xvnpw/ai-nutrition-pro-design-gpt3.5/issues/1) |
+| Security Acceptance Criteria for User Story | **Anthropic Claude 2** | [0001_STORE_DIET_INTRODUCTIONS.md](https://github.com/xvnpw/ai-nutrition-pro-design-claude2/blob/main/user-stories/0001_STORE_DIET_INTRODUCTIONS.md) or [issue](https://github.com/xvnpw/ai-nutrition-pro-design-claude2/issues/1) | [0001_STORE_DIET_INTRODUCTIONS_SECURITY.md](https://github.com/xvnpw/ai-nutrition-pro-design-claude2/blob/main/user-stories/0001_STORE_DIET_INTRODUCTIONS_SECURITY.md) or as [issue comment](https://github.com/xvnpw/ai-nutrition-pro-design-claude2/issues/1) |
 
 ## Inputs
 
@@ -48,6 +54,10 @@ Add a step like this to your workflow:
     # Default: ''
     # Required
     type: 'project'
+
+    # Provider name, one of: openai, openrouter
+    # Default: 'openai'
+    provider: 'openai'
 
     # Paths to input files formatted as json array
     # Default: ''
@@ -71,11 +81,13 @@ Add a step like this to your workflow:
 
     # Type of OpenAI GPT model
     # Default: gpt-3.5-turbo
+    # For openai models check: https://platform.openai.com/account/rate-limits
+    # For openrouter models check: https://openrouter.ai/docs#models
     model: 'gpt-3.5-turbo-16k'
 
     # Sampling temperature for a model
     # Default: 0
-    temperature: '0.7'
+    temperature: '0.3'
 
     # Verbose log messages
     # Default: false
@@ -91,10 +103,23 @@ Add a step like this to your workflow:
     templates_dir: './templates'
   env:
     # OpenAI API key
+    # Optional. Only if want to use openai provider
     # Get a key from https://platform.openai.com/account/api-keys
     # Add it to secrets in your repository settings
     OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+
+    # Open Router API key
+    # Optional. Only if want to use openrouter provider
+    # Get a key from https://openrouter.ai/keys
+    # Add it to secrets in your repository settings
+    OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
 ```
+
+## LLM Providers
+
+Currently supporting:
+- [OpenAI](https://platform.openai.com/)
+- [OpenRouter](https://openrouter.ai/)
 
 ## Usage
 
@@ -379,7 +404,7 @@ With [Add & Commit](https://github.com/marketplace/actions/add-commit) you can g
           add: 'ARCHITECTURE_SECURITY.md'
 ```
 
-If you change output file, remember to change commited file:
+If you change output file, remember to change commit file:
 ```yaml
       - name: Commit changes
         uses: EndBug/add-and-commit@v9
@@ -446,7 +471,7 @@ This project started as research of LLMs capabilities, but it improved over time
 
 - Python
 - LLM Tooling: [Langchain](https://github.com/hwchase17/langchain)
-- LLM: [OpenAI GPT](https://openai.com/)
+- LLM: [OpenAI GPT](https://openai.com/), [OpenRouter](https://openrouter.ai/)
 
 ## Fork
 
@@ -461,5 +486,11 @@ git push --follow-tags
 
 ## Privacy
 
+### OpenAI
+
 This project uses OpenAI API. By default your data will not be used for learning, as per [API data usage policies](https://openai.com/policies/api-data-usage-policies):
 > OpenAI will not use data submitted by customers via our API to train or improve our models, unless you explicitly decide to share your data with us for this purpose. You can opt-in to share data.
+
+### OpenRouter
+
+OpenRouter describe privacy and filtering in [settings](https://openrouter.ai/account) for each model.

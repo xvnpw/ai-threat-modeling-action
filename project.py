@@ -2,8 +2,8 @@ from langchain.document_loaders import TextLoader
 from langchain.chains.llm import LLMChain
 from langchain.prompts import PromptTemplate
 from langchain.chains.combine_documents.stuff import StuffDocumentsChain
-from langchain.chat_models import ChatOpenAI
 from langchain.callbacks import get_openai_callback
+from llms import LLMWrapper
 
 import logging
 from pathlib import Path
@@ -21,7 +21,7 @@ def analyze_project(args, inputs: [Path], output: Path):
 
     # Define LLM chain
     logging.debug(f'using temperature={args.temperature} and model={args.model}')
-    llm = ChatOpenAI(temperature=args.temperature, model_name=args.model)
+    llm = LLMWrapper(args).create()
     llm_chain = LLMChain(llm=llm, prompt=prompt)
 
     # Define StuffDocumentsChain
