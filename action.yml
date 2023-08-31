@@ -10,6 +10,10 @@ inputs:
     description: 'type of feature' # one of: project, architecture, user-story, user-story-issue
     required: true
     default: ''
+  provider:
+    description: 'provider name' # one of: openai, openrouter
+    required: false
+    default: 'openai'
   input_files:
     description: 'paths to input files formatted as json array' # e.g. ["user-stories/0001_STORE_DIET_INTRODUCTIONS.md","user-stories/0002_XYZ.md"]
     required: false
@@ -65,3 +69,4 @@ runs:
     - ${{ inputs.debug }}
     - ${{ inputs.user_story_output_suffix }}
     - ${{ inputs.templates_dir }}
+    - ${{ inputs.provider }}

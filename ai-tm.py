@@ -8,17 +8,7 @@ from project import analyze_project
 from architecture import analyze_architecture
 from user_story import analyze_user_story
 
-PROJECT_INPUT = "PROJECT.md"
-PROJECT_OUTPUT = "PROJECT_SECURITY.md"
-ARCHITECTURE_INPUT = "ARCHITECTURE.md"
-ARCHITECTURE_OUTPUT = "ARCHITECTURE_SECURITY.md"
-USER_STORY_INPUT = "user-stories/0001_STORE_DIET_INTRODUCTIONS.md"
-USER_STORY_OUTPUT = "user-stories/0001_STORE_DIET_INTRODUCTIONS_SECURITY.md"
-
-OPENAI_API_KEY = os.environ.get('OPENAI_API_KEY')
-if not OPENAI_API_KEY:
-    print('OPENAI_API_KEY environment variable not set.')
-    exit(1)
+import constants
     
 BASEDIR = os.environ.get('GITHUB_WORKSPACE')
 if not BASEDIR:
@@ -31,6 +21,7 @@ parser = argparse.ArgumentParser(
     epilog='Experimental. Use on your own risk'
 )
 parser.add_argument("type", type=str, choices=['project', 'architecture', 'user-story'], help="Type of feature")
+parser.add_argument("--provider", type=str, choices=['openai', 'openrouter'], help="Provider of LLM API", default="openai")
 parser.add_argument("--inputs", type=str, help="json array of paths to input files", nargs='?')
 parser.add_argument("--output", type=str, help="path to output file", nargs='?')
 parser.add_argument("-ai", "--architecture-inputs", type=str, help="for user-story only: json array of paths to architecture files", nargs='?')
@@ -54,26 +45,26 @@ logging.debug(f'running for feature: {args.type}...')
 
 if args.type == "project":
     if not args.inputs:
-        inputs = [Path(BASEDIR).joinpath(PROJECT_INPUT)]
+        inputs = [Path(BASEDIR).joinpath(constants.PROJECT_INPUT)]
     else:
         raw_input_paths = json.loads(args.inputs)
         inputs = [Path(BASEDIR).joinpath(p) for p in raw_input_paths]
     
     if not args.output:
-        output = Path(BASEDIR).joinpath(PROJECT_OUTPUT)
+        output = Path(BASEDIR).joinpath(constants.PROJECT_OUTPUT)
     else:
         output = Path(BASEDIR).joinpath(args.output)
     analyze_project(args, inputs, output)
     
 if args.type == "architecture":
     if not args.inputs:
-        inputs = [Path(BASEDIR).joinpath(ARCHITECTURE_INPUT)]
+        inputs = [Path(BASEDIR).joinpath(constants.ARCHITECTURE_INPUT)]
     else:
         raw_input_paths = json.loads(args.inputs)
         inputs = [Path(BASEDIR).joinpath(p) for p in raw_input_paths]
     
     if not args.output:
-        output = Path(BASEDIR).joinpath(ARCHITECTURE_OUTPUT)
+        output = Path(BASEDIR).joinpath(constants.ARCHITECTURE_OUTPUT)
     else:
         output = Path(BASEDIR).joinpath(args.output)
     analyze_architecture(args, inputs, output)
@@ -97,13 +88,13 @@ if args.type == "user-story":
         logging.debug(f'output set to: {output}')
     
         if not args.architecture_inputs:
-            architecture_inputs = [Path(BASEDIR).joinpath(ARCHITECTURE_INPUT)]
+            architecture_inputs = [Path(BASEDIR).joinpath(constants.ARCHITECTURE_INPUT)]
         else:
             architecture_raw_input_paths = json.loads(args.architecture_inputs)
             architecture_inputs = [Path(BASEDIR).joinpath(p) for p in architecture_raw_input_paths]
             
         if not args.architecture_threat_model_input:
-            architecture_tm_input = Path(BASEDIR).joinpath(ARCHITECTURE_OUTPUT)
+            architecture_tm_input = Path(BASEDIR).joinpath(constants.ARCHITECTURE_OUTPUT)
         else:
             architecture_tm_input = Path(BASEDIR).joinpath(args.architecture_threat_model_input)
         

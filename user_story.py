@@ -1,6 +1,5 @@
 from langchain.document_loaders import TextLoader
 from langchain.chains.llm import LLMChain
-from langchain.chat_models import ChatOpenAI
 from langchain.prompts import load_prompt
 from langchain.prompts.chat import (
     ChatPromptTemplate,
@@ -11,6 +10,8 @@ from langchain.callbacks import get_openai_callback
 from langchain.prompts import PromptTemplate
 from langchain.chains.combine_documents.stuff import StuffDocumentsChain
 from langchain.output_parsers import PydanticOutputParser
+
+from llms import LLMWrapper
 
 import logging
 from pathlib import Path
@@ -69,7 +70,7 @@ def analyze_user_story(args, input: Path, architecture_inputs: [Path], architect
 
     # Define LLM chain
     logging.debug(f'using temperature={args.temperature} and model={args.model}')
-    llm = ChatOpenAI(temperature=args.temperature, model_name=args.model)
+    llm = LLMWrapper(args).create()
     llm_chain = LLMChain(llm=llm, prompt=chat_prompt_template)
     
     with get_openai_callback() as cb:
@@ -112,7 +113,7 @@ def _list_components_for_user_story(args, user_story_doc) -> str:
 
     # Define LLM chain
     logging.debug(f'using temperature={args.temperature} and model={args.model}')
-    llm = ChatOpenAI(temperature=args.temperature, model_name=args.model)
+    llm = LLMWrapper(args).create()
     llm_chain = LLMChain(llm=llm, prompt=prompt)
 
     # Define StuffDocumentsChain
