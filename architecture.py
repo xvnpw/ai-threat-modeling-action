@@ -100,7 +100,7 @@ def _list_data_flow_for_architecture(args, docs_all) -> str:
     logging.info("finished waiting on chatgpt response - data flows")
     logging.debug(f"got following data flows: {gen_data_flows}")
     
-    gen_data_flows = [df.data_flow for df in gen_data_flows.data_flows]
+    gen_data_flows = [df.data_flow for df in gen_data_flows.data_flows if df.external_person == False]
     
     return gen_data_flows
 
