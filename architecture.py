@@ -65,7 +65,7 @@ def analyze_architecture(args, inputs: Path, output: Path):
         with get_openai_callback() as cb:
             ret = stuff_chain.run(input_documents=docs_all, dataflow=df)
             logging.debug(cb)
-        logging.info(f"({idx+1} of {len(data_flows)}) finished waiting on chatgpt response")
+        logging.info(f"({idx+1} of {len(data_flows)}) finished waiting on llm response")
         
         fixing_parser = OutputFixingParser.from_llm(parser=parser, llm=llm)
         gen_threats = fixing_parser.parse(ret)
@@ -97,7 +97,7 @@ def _list_data_flow_for_architecture(args, docs_all) -> str:
         
     fixing_parser = OutputFixingParser.from_llm(parser=parser, llm=llm)
     gen_data_flows = fixing_parser.parse(ret)
-    logging.info("finished waiting on chatgpt response - data flows")
+    logging.info("finished waiting on llm response - data flows")
     logging.debug(f"got following data flows: {gen_data_flows}")
     
     gen_data_flows = [df.data_flow for df in gen_data_flows.data_flows if df.external_person is False]

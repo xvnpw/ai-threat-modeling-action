@@ -32,7 +32,7 @@ def analyze_project(args, inputs: [Path], output: Path):
     with get_openai_callback() as cb:
         ret = stuff_chain.run(docs_all)
         logging.debug(cb)
-    logging.info("finished waiting on chatgpt response")
+    logging.info("finished waiting on llm response")
     
     f = open(str(output.resolve()), "w")
     f.write("# (AI Generated) High Level Security and Privacy Requirements\n\n")

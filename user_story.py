@@ -83,7 +83,7 @@ def analyze_user_story(args, input: Path, architecture_inputs: [Path], architect
             format_instructions=parser.get_format_instructions())
         logging.debug(cb)
     
-    logging.info("finished waiting on chatgpt response")
+    logging.info("finished waiting on llm response")
     
     fixing_parser = OutputFixingParser.from_llm(parser=parser, llm=llm)
     gen_components_all = fixing_parser.parse(ret)
@@ -128,7 +128,7 @@ def _list_components_for_user_story(args, user_story_doc) -> str:
     
     fixing_parser = OutputFixingParser.from_llm(parser=parser, llm=llm)
     gen_components = fixing_parser.parse(ret)
-    logging.info("finished waiting on chatgpt response - components")
+    logging.info("finished waiting on llm response - components")
     logging.debug(f"got following components: {gen_components}")
     
     gen_components = [c.component_name for c in gen_components.components]
