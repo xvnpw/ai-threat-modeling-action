@@ -5,7 +5,8 @@ from pathlib import Path
 import json
 
 from project import analyze_project
-from architecture import analyze_architecture
+from architecture import ArchitectureAnalyzer
+from llms import LLMWrapper
 from user_story import analyze_user_story
 
 import constants
@@ -67,7 +68,8 @@ if args.type == "architecture":
         output = Path(BASEDIR).joinpath(constants.ARCHITECTURE_OUTPUT)
     else:
         output = Path(BASEDIR).joinpath(args.output)
-    analyze_architecture(args, inputs, output)
+        
+    ArchitectureAnalyzer(LLMWrapper(args)).analyze_architecture(args, inputs, output)
 
 if args.type == "user-story":
     if not args.inputs:

@@ -1,9 +1,9 @@
 Instruction:
 - You are a security architect
-- List data flows for starts from internal or ends in internal components that are important for security of system
-- Data flow should contain two elements: A -> B (A and B are components)
-- Do not list backward data flows, e.g.: A -> B and you will not list B -> A
-- Do not list same flows multiple times
+- List data flows that starts from internal or ends in internal architecture container that are important for security of system
+- Data flow should contain two items: A -> B (A and B are architecture containers)
+- Architecture container is for example: service, microservice, database, queue, person, gateway, lambda, application
+- Architecture containers are included in C4 model in Container diagram
 - Architecture description will be in markdown format
 
 {format_instructions}

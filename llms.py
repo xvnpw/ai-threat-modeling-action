@@ -1,4 +1,5 @@
 from langchain.chat_models import ChatOpenAI
+from langchain.llms.base import LLM
 import constants
 import os
 
@@ -6,7 +7,7 @@ class LLMWrapper:
     def __init__(self, args):
         self.args = args
         
-    def create(self) -> ChatOpenAI:
+    def create(self) -> LLM:
         if self.args.provider == "openrouter":
             openai_api_key=os.environ.get(constants.OPENROUTER_API_KEY)
             openai_api_base=constants.OPENROUTER_API_BASE
