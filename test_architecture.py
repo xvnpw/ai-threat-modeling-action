@@ -46,5 +46,5 @@ class TestArchitecture:
         data_flow_analyzer = DataFlowAnalyzer(fake_llm_wrapper)
         data_flow_names = data_flow_analyzer.list_data_flow_for_architecture(args, docs_all)
         
-        assert(len(data_flow_names), 1)
-        assert(data_flow_names[0], "Data flow 1: Client -> API Gateway")
+        assert(len(data_flow_names) == 1)
+        assert(data_flow_names[0] == "Data flow 1: Client -> API Gateway")

@@ -5,8 +5,6 @@ from langchain.chains.combine_documents.stuff import StuffDocumentsChain
 from langchain.callbacks import get_openai_callback
 from langchain.output_parsers import PydanticOutputParser, OutputFixingParser
 
-from llms import LLMWrapper
-
 import logging
 from pathlib import Path
 
