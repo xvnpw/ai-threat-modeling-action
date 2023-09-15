@@ -1,0 +1,1 @@
+Great, I understand that you need a step-by-step plan to perform threat modeling using the STRIDE per element technique.
