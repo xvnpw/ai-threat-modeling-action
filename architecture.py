@@ -1,37 +1,21 @@
-from langchain.document_loaders import TextLoader
-from langchain.chains.llm import LLMChain
-from langchain.prompts import PromptTemplate
-from langchain.chains.combine_documents.stuff import StuffDocumentsChain
-from langchain.callbacks import get_openai_callback
-from langchain.output_parsers import PydanticOutputParser, OutputFixingParser
-
 import logging
 from pathlib import Path
-
 from typing import List
-from pydantic import BaseModel, Field
 
-from langchain.document_loaders import TextLoader
-from langchain.chains.llm import LLMChain
-from langchain.prompts import load_prompt
-from langchain.prompts.chat import (
-    ChatPromptTemplate,
-    HumanMessagePromptTemplate,
-    AIMessagePromptTemplate,
-)
-from langchain.schema.messages import AIMessage
 from langchain.callbacks import get_openai_callback
-from langchain.prompts import PromptTemplate
 from langchain.chains.combine_documents.stuff import StuffDocumentsChain
-from langchain.output_parsers import PydanticOutputParser, OutputFixingParser
+from langchain.chains.llm import LLMChain
+from langchain.document_loaders import TextLoader
+from langchain.output_parsers import OutputFixingParser, PydanticOutputParser
+from langchain.prompts import PromptTemplate, load_prompt
+from langchain.prompts.chat import (AIMessagePromptTemplate,
+                                    ChatPromptTemplate,
+                                    HumanMessagePromptTemplate)
+from langchain.schema.messages import AIMessage
+from pydantic import BaseModel, Field
 
 from llms import LLMWrapper
 
-import logging
-from pathlib import Path
-
-from typing import List
-from pydantic import BaseModel, Field
 
 class DataFlow(BaseModel):
     data_flow: str = Field(description="Name of data flow, e.g. Data flow 1: Client -> Element A, Data flow 2: Element A -> Element B")
@@ -59,12 +43,14 @@ class DataFlowAnalyzer:
     
     def list_data_flow_for_architecture(self, args, architecture_docs_all) -> dict:
         parser = PydanticOutputParser(pydantic_object=DataFlowList)
-            
-        chat_prompt_template = ChatPromptTemplate.from_messages([
+        
+        messages = [
             HumanMessagePromptTemplate(prompt=load_prompt(f"{args.template_dir}/arch_data_flows_step1_tpl.yaml")),
             AIMessagePromptTemplate.from_template_file(template_file=f"{args.template_dir}/arch_data_flows_confirmation_step1_tpl.txt", input_variables=[]),
             HumanMessagePromptTemplate.from_template_file(f"{args.template_dir}/arch_data_flows_step2_tpl.txt", input_variables=[])
-        ])
+        ]
+        
+        chat_prompt_template = ChatPromptTemplate.from_messages(messages)
 
         # Define LLM chain
         logging.debug(f'using temperature={args.temperature} and model={args.model}')
@@ -78,13 +64,9 @@ class DataFlowAnalyzer:
             logging.debug(cb)
             logging.info("finished waiting on llm response - plan of threat model")
             
-        chat_prompt_template = ChatPromptTemplate.from_messages([
-            HumanMessagePromptTemplate(prompt=load_prompt(f"{args.template_dir}/arch_data_flows_step1_tpl.yaml")),
-            AIMessagePromptTemplate.from_template_file(template_file=f"{args.template_dir}/arch_data_flows_confirmation_step1_tpl.txt", input_variables=[]),
-            HumanMessagePromptTemplate.from_template_file(f"{args.template_dir}/arch_data_flows_step2_tpl.txt", input_variables=[]),
-            AIMessage(content=threat_modeling_plan), 
-            HumanMessagePromptTemplate(prompt=load_prompt(f"{args.template_dir}/arch_data_flows_step3_tpl.yaml"))
-        ])
+        messages.append(AIMessage(content=threat_modeling_plan))
+        messages.append(HumanMessagePromptTemplate(prompt=load_prompt(f"{args.template_dir}/arch_data_flows_step3_tpl.yaml")))
+        chat_prompt_template = ChatPromptTemplate.from_messages(messages)
         
         llm_chain = LLMChain(llm=llm, prompt=chat_prompt_template)
         with get_openai_callback() as cb:
@@ -147,10 +129,9 @@ class ArchitectureAnalyzer:
             gen_threats = fixing_parser.parse(ret)
             
             # review
-            gen_threats_reviewed = self.threat_model_reviewer.review_threat_model(args, docs_all, gen_threats.json())
+            #gen_threats_reviewed = self.threat_model_reviewer.review_threat_model(args, docs_all, gen_threats.json())
             
             gen_threats_all.append(gen_threats)
-            gen_threats_all.append(gen_threats_reviewed)
             
         self._processJsonToMarkdownAndSave(gen_threats_all, output)
 
