@@ -18,7 +18,7 @@ class FakeLLMWrapper(LLMWrapper):
 
 class TestArchitecture:
     def test_exclude_external_persons(self):
-        responses = ["""{
+        responses = ["Plan", """{
    "data_flows":[
       {
          "data_flow":"Data flow 1: Client -> API Gateway",
