@@ -178,7 +178,7 @@ class ThreatModelReviewer:
         with get_openai_callback() as cb:
             ret = stuff_chain.run(current_threat_model=threat_model_for_data_flow, input_documents=architecture_docs_all)
             logging.debug(cb)
-        logging.info(f"(finished waiting on threat model review")
+        logging.info("(finished waiting on threat model review")
         
         fixing_parser = OutputFixingParser.from_llm(parser=parser, llm=llm)
         gen_threats = fixing_parser.parse(ret)

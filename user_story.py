@@ -1,24 +1,21 @@
-from langchain.document_loaders import TextLoader
-from langchain.chains.llm import LLMChain
-from langchain.prompts import load_prompt
-from langchain.prompts.chat import (
-    ChatPromptTemplate,
-    HumanMessagePromptTemplate,
-    AIMessagePromptTemplate,
-)
+import logging
+from pathlib import Path
+from typing import List
+
 from langchain.callbacks import get_openai_callback
-from langchain.prompts import PromptTemplate
 from langchain.chains.combine_documents.stuff import StuffDocumentsChain
-from langchain.output_parsers import PydanticOutputParser, OutputFixingParser
+from langchain.chains.llm import LLMChain
+from langchain.document_loaders import TextLoader
+from langchain.output_parsers import OutputFixingParser, PydanticOutputParser
+from langchain.prompts import PromptTemplate, load_prompt
+from langchain.prompts.chat import (AIMessagePromptTemplate,
+                                    ChatPromptTemplate,
+                                    HumanMessagePromptTemplate)
+from langchain.schema.messages import AIMessage
+from pydantic import BaseModel, Field
 
 from llms import LLMWrapper
 
-import logging
-from pathlib import Path
-
-from typing import List
-from pydantic import BaseModel, Field
-from langchain.schema.messages import AIMessage
 
 class AcceptanceCriteria(BaseModel):
     id: str = Field(description="Id of acceptance criteria, eg. AC1, AC2, AC3")
