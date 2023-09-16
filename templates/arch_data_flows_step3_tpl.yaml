@@ -1,0 +1,7 @@
+_type: prompt
+input_variables:
+    - format_instructions
+template: |
+    Execure plan but return only list of data flows between elements. 
+
+    {format_instructions}

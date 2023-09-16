@@ -1,28 +1,27 @@
-from langchain.document_loaders import TextLoader
-from langchain.chains.llm import LLMChain
-from langchain.prompts import load_prompt
-from langchain.prompts.chat import (
-    ChatPromptTemplate,
-    HumanMessagePromptTemplate,
-    AIMessagePromptTemplate,
-)
+import logging
+from pathlib import Path
+from typing import List
+
 from langchain.callbacks import get_openai_callback
-from langchain.prompts import PromptTemplate
 from langchain.chains.combine_documents.stuff import StuffDocumentsChain
-from langchain.output_parsers import PydanticOutputParser, OutputFixingParser
+from langchain.chains.llm import LLMChain
+from langchain.document_loaders import TextLoader
+from langchain.output_parsers import OutputFixingParser, PydanticOutputParser
+from langchain.prompts import PromptTemplate, load_prompt
+from langchain.prompts.chat import (AIMessagePromptTemplate,
+                                    ChatPromptTemplate,
+                                    HumanMessagePromptTemplate)
+from langchain.schema.messages import AIMessage
+from pydantic import BaseModel, Field
 
 from llms import LLMWrapper
 
-import logging
-from pathlib import Path
-
-from typing import List
-from pydantic import BaseModel, Field
 
 class AcceptanceCriteria(BaseModel):
     id: str = Field(description="Id of acceptance criteria, eg. AC1, AC2, AC3")
     acceptance_criteria: str = Field(description="Value of acceptance criteria. Very specific and detailed, eg: The API for payments (`/api/process`) must enforce proper input validation to prevent injection attacks.")
-    explanation: str = Field(description="Expiation why acceptance criteria is included for particular component for this user story")
+    explanation: str = Field(description="Explain why acceptance criteria is included for particular component for this user story")
+    reference_to_threat_model: str = Field(description="Refer threat from threat model that will be mitigated by this acceptance criteria")
 
 class ComponentAcceptanceCriteriaList(BaseModel):
     component_name: str = Field(description="Name of component, example: Service A, API Gateway, Database B, Microservice X, Queue Z")
@@ -56,7 +55,7 @@ def analyze_user_story(args, input: Path, architecture_inputs: [Path], architect
     
     components_for_user_story = _list_components_for_user_story(args, user_story_doc)
         
-    chat_prompt_template = ChatPromptTemplate.from_messages([
+    messages = [
         HumanMessagePromptTemplate(prompt=load_prompt(f"{args.template_dir}/user_story_intro_tpl.yaml")),
         AIMessagePromptTemplate.from_template_file(template_file=f"{args.template_dir}/user_story_ai_confirmation_step1_tpl.txt", input_variables=[]),
         HumanMessagePromptTemplate(prompt=load_prompt(f"{args.template_dir}/user_story_doc_tpl.yaml")),
@@ -64,13 +63,31 @@ def analyze_user_story(args, input: Path, architecture_inputs: [Path], architect
         HumanMessagePromptTemplate(prompt=load_prompt(f"{args.template_dir}/user_story_arch_doc_tpl.yaml")),
         AIMessagePromptTemplate.from_template_file(template_file=f"{args.template_dir}/user_story_ai_confirmation_step3_tpl.txt", input_variables=[]),
         HumanMessagePromptTemplate(prompt=load_prompt(f"{args.template_dir}/user_story_arch_tm_doc_tpl.yaml")),
-    ])
+    ]
+    chat_prompt_template = ChatPromptTemplate.from_messages(messages)
 
     parser = PydanticOutputParser(pydantic_object=AcceptanceCriteriaList)
 
     # Define LLM chain
     logging.debug(f'using temperature={args.temperature} and model={args.model}')
     llm = LLMWrapper(args).create()
+    llm_chain = LLMChain(llm=llm, prompt=chat_prompt_template)
+    
+    with get_openai_callback() as cb:
+        architecture_docs_loaded = "\n\n".join([str(d.page_content) for d in architecture_docs_all])
+        
+        list_acceptance_criteria_plan = llm_chain.run(user_story_doc=str(user_story_doc[0].page_content), 
+            components="\n".join(components_for_user_story),
+            arch_doc=architecture_docs_loaded,
+            arch_tm_doc=str(architecture_tm_doc[0].page_content))
+        logging.debug(cb)
+    
+    logging.info("finished waiting on llm response")
+    
+    messages.append(AIMessage(content=list_acceptance_criteria_plan))
+    messages.append(HumanMessagePromptTemplate(prompt=load_prompt(f"{args.template_dir}/user_story_final_go.yaml")))
+    chat_prompt_template = ChatPromptTemplate.from_messages(messages)
+    
     llm_chain = LLMChain(llm=llm, prompt=chat_prompt_template)
     
     with get_openai_callback() as cb:
