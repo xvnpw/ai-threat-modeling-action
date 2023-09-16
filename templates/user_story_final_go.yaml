@@ -1,0 +1,7 @@
+_type: prompt
+input_variables:
+    - format_instructions
+template: |
+    Execute step by step plan and list acceptance criteria.
+
+    {format_instructions}
