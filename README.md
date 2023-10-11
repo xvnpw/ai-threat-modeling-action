@@ -1,6 +1,6 @@
 # AI Threat Modeling action
 
-[![Python package](https://github.com/xvnpw/ai-threat-modeling-action/actions/workflows/build.yaml/badge.svg)](https://github.com/xvnpw/ai-threat-modeling-action/actions/workflows/build.yaml)
+[![Docker](https://github.com/xvnpw/ai-threat-modeling-action/actions/workflows/build.yaml/badge.svg)](https://github.com/xvnpw/ai-threat-modeling-action/actions/workflows/build.yaml)
 
 🤖 You can use this GitHub Action to generate AI featured content for threat modeling and security review.
 
