@@ -53,7 +53,7 @@ inputs:
   templates_dir:
     description: 'prompt templates directory' # e.g. './templates'
     required: false
-    default: '/app/templates' # build-in templates from docker image
+    default: '/app/ai-threat-modeling/templates' # build-in templates from docker image
 runs:
   using: 'docker'
   image: 'Dockerfile'
