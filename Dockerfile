@@ -1,7 +1,7 @@
 # Container image that runs your code
 FROM python@sha256:88880bc85b0e3342ff416c796df7ad9079b2805f92a6ebfc5c84ac582fb25de9
 
-ENV AI_THREAT_MODELING_VERSION=1.0.0
+ENV AI_THREAT_MODELING_VERSION=1.0.1
 
 WORKDIR /app
 
