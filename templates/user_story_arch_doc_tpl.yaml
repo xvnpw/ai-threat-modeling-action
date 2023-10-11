@@ -1,6 +1,0 @@
-_type: prompt
-input_variables:
-    - arch_doc
-template: |
-    Architecture Description:
-    "{arch_doc}"

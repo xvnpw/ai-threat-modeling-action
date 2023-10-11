@@ -1,7 +1,0 @@
-You are solution architect. I will provide you User Story and you will list all 
-architecture containers, services or applications included in architecture.
-
-{format_instructions}
-
-User Story:
-"{text}"

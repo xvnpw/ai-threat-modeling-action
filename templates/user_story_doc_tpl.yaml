@@ -1,6 +1,0 @@
-_type: prompt
-input_variables:
-    - user_story_doc
-template: |
-    User Story:
-    "{user_story_doc}"

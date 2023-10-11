@@ -1,6 +1,0 @@
-_type: prompt
-input_variables:
-    - arch_tm_doc
-template: |
-    Architecture Threat Model:
-    "{arch_tm_doc}"
