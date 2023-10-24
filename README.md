@@ -2,7 +2,9 @@
 
 [![Docker](https://github.com/xvnpw/ai-threat-modeling-action/actions/workflows/build.yaml/badge.svg)](https://github.com/xvnpw/ai-threat-modeling-action/actions/workflows/build.yaml)
 
-🤖 You can use this GitHub Action to generate AI featured content for threat modeling and security review.
+🤖 You can use this GitHub Action to generate AI featured content for threat modeling and security review. It uses [xvnpw/ai-threat-modeling](https://github.com/xvnpw/ai-threat-modeling) underneath.
+
+> ⚠️ This is experimental project
 
 Supported features:
 | Feature | Description |
@@ -483,7 +485,7 @@ with:
 
 ## 🎉 Roadmap
 
-This project started as research of LLMs capabilities, but it improved over time beyond simple PoC. With version 1, it can be used to review documents in github using direct push, pr or issues. Further development will depend on usage and feature requests from community. 
+This project started as research of LLMs capabilities, but it improved over time beyond simple PoC. With version 1, it can be used to review documents in github using direct push, pr or issues. Further development or fixes is **not guaranteed**. If you plan to use it in your company, best to fork it and tune to your needs.
 
 ## 🚀 Tech Stack
 
