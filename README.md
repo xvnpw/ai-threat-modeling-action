@@ -15,6 +15,7 @@ Supported features:
 
 Table of content
 ===============
+* [Versions](#version)
 * [Example Outputs](#example-outputs)
   * [Feature: High Level Security and Privacy Requirements](#feature-high-level-security-and-privacy-requirements)
   * [Feature: Threat Model of Architecture](#feature-threat-model-of-architecture)
@@ -36,6 +37,15 @@ Table of content
 * [Privacy](#privacy)
   * [OpenAI](#openai)
   * [OpenRouter](#openrouter)
+
+## Versions
+
+Use below versions for specific models:
+
+| Model | Version | Note |
+| --- | --- | --- |
+| OpenAI GPT-3.5, Anthropic Claude 2 | v1.2.4 | ⚠️ Latest releases include prompts that might not work properly with those models |
+| OpenAI GPT-4 | Latest | 
 
 ## Example Outputs
 
