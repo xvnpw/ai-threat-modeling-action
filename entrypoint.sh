@@ -12,6 +12,10 @@ if $9 = 'true'; then
     ARGS="$ARGS --debug"
 fi
 
+if ${13} = 'true'; then
+    ARGS="$ARGS --review"
+fi
+
 echo $ARGS
 
 /usr/local/bin/python /app/ai-threat-modeling/ai-tm.py $ARGS

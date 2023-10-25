@@ -33,11 +33,15 @@ inputs:
   model:
     description: 'type of LLM model' # e.g. gpt-3.5-turbo, anthropic/claude-2
     required: false
-    default: 'gpt-3.5-turbo'
+    default: 'gpt-4'
   temperature:
     description: 'sampling temperature for a model'
     required: false
     default: 0
+  review:
+    description: 'review input files using LLM'
+    required: false
+    default: false
   verbose:
     description: 'verbose messages'
     required: false
@@ -70,3 +74,4 @@ runs:
     - ${{ inputs.user_story_output_suffix }}
     - ${{ inputs.templates_dir }}
     - ${{ inputs.provider }}
+    - ${{ inputs.review }}

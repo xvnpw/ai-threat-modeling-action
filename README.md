@@ -110,7 +110,7 @@ Add a step like this to your workflow:
     user_story_output_suffix: '_SECURITY'
 
     # Type of OpenAI GPT model
-    # Default: gpt-3.5-turbo
+    # Default: gpt-4
     # For openai models check: https://platform.openai.com/account/rate-limits
     # For openrouter models check: https://openrouter.ai/docs#models
     model: 'gpt-3.5-turbo-16k'
