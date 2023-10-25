@@ -12,6 +12,7 @@ Supported features:
 | High Level Security and Privacy Requirements | Action will take project description and will use LLM to generate high level requirements regarding security and privacy |
 | Threat Model of Architecture | Action will take architecture description and will use LLM to generate threat model for it |
 | Security Acceptance Criteria for User Story | Action will take particular user story and generate security related acceptance criteria |
+| Review of input file | Action will take input file (e.g. Architecture Description) are review it using LLM |
 
 Table of content
 ===============
@@ -20,6 +21,7 @@ Table of content
   * [Feature: High Level Security and Privacy Requirements](#feature-high-level-security-and-privacy-requirements)
   * [Feature: Threat Model of Architecture](#feature-threat-model-of-architecture)
   * [Feature: Security Acceptance Criteria for User Story](#feature-security-acceptance-criteria-for-user-story)
+  * [Feature: Review of input file](#feature-review-of-input-file)
 * [Inputs](#inputs)
 * [LLM Providers](#llm-providers)
 * [Usage](#usage)
@@ -28,6 +30,7 @@ Table of content
   * [Security Acceptance Criteria for User Story](#security-acceptance-criteria-for-user-story)
      * [Trigger on changes to directory](#trigger-on-changes-to-directory)
      * [Trigger on issue change](#trigger-on-issue-change)
+  * [Review of input file](#review-of-input-file)
   * [Push into Repository](#push-into-repository)
   * [Create Pull Request](#create-pull-request)
   * [Custom Prompts](#custom-prompts)
@@ -72,6 +75,12 @@ Use below versions for specific models:
 | **OpenAI GPT-3.5** | [0001_STORE_DIET_INTRODUCTIONS.md](https://github.com/xvnpw/ai-nutrition-pro-design-gpt3.5/blob/main/user-stories/0001_STORE_DIET_INTRODUCTIONS.md) or [issue](https://github.com/xvnpw/ai-nutrition-pro-design-gpt3.5/issues/1) | [0001_STORE_DIET_INTRODUCTIONS_SECURITY.md](https://github.com/xvnpw/ai-nutrition-pro-design-gpt3.5/blob/main/user-stories/0001_STORE_DIET_INTRODUCTIONS_SECURITY.md) or as [issue comment](https://github.com/xvnpw/ai-nutrition-pro-design-gpt3.5/issues/1) |
 | **Anthropic Claude 2** | [0001_STORE_DIET_INTRODUCTIONS.md](https://github.com/xvnpw/ai-nutrition-pro-design-claude2/blob/main/user-stories/0001_STORE_DIET_INTRODUCTIONS.md) or [issue](https://github.com/xvnpw/ai-nutrition-pro-design-claude2/issues/2) | [0001_STORE_DIET_INTRODUCTIONS_SECURITY.md](https://github.com/xvnpw/ai-nutrition-pro-design-claude2/blob/main/user-stories/0001_STORE_DIET_INTRODUCTIONS_SECURITY.md) or as [issue comment](https://github.com/xvnpw/ai-nutrition-pro-design-claude2/issues/2) |
 | **OpenAI GPT-4** | [0001_STORE_DIET_INTRODUCTIONS.md](https://github.com/xvnpw/ai-nutrition-pro-design-gpt4/blob/main/user-stories/0001_STORE_DIET_INTRODUCTIONS.md) or [issue](https://github.com/xvnpw/ai-nutrition-pro-design-gpt4/issues/1) | [0001_STORE_DIET_INTRODUCTIONS_SECURITY.md](https://github.com/xvnpw/ai-nutrition-pro-design-gpt4/blob/main/user-stories/0001_STORE_DIET_INTRODUCTIONS_SECURITY.md) or as [issue comment](https://github.com/xvnpw/ai-nutrition-pro-design-gpt4/issues/1) |
+
+### Feature: Review of input file
+
+| Model | Input | Output | 
+| --- | --- | --- |
+| **OpenAI GPT-4** | [ARCHITECTURE.md](https://github.com/xvnpw/ai-nutrition-pro-design-gpt4/blob/main/ARCHITECTURE.md) | [ARCHITECTURE_REVIEW.md](https://github.com/xvnpw/ai-nutrition-pro-design-gpt4/blob/main/ARCHITECTURE_REVIEW.md) |
 
 ## Inputs
 
@@ -118,6 +127,10 @@ Add a step like this to your workflow:
     # Sampling temperature for a model
     # Default: 0
     temperature: '0.3'
+
+    # Review input files using LLM
+    # Default: false
+    review: true
 
     # Verbose log messages
     # Default: false
@@ -420,6 +433,52 @@ jobs:
           issue-number: ${{ github.event.issue.number }}
           body-path: ${{ github.workspace }}/issue_body_SECURITY.md
           edit-mode: replace
+```
+
+### Review of input file
+
+**Example (direct push into repository):**
+
+```yaml
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'ARCHITECTURE.md'
+  workflow_dispatch:
+
+jobs:
+  architecture_ai_review_job:
+    runs-on: ubuntu-latest
+
+    permissions:
+      # Give the default GITHUB_TOKEN write permission to commit and push the
+      # added or changed files to the repository.
+      contents: write
+
+    name: Run ai threat modeling action for architecture review
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+      - name: Generate architecture review
+        uses: xvnpw/ai-threat-modeling-action@v1.3.0
+        with:
+          type: 'architecture' # will create threat model
+          input_files: 'ARCHITECTURE.md'
+          output_file: 'ARCHITECTURE_REVIEW.md'
+          review: true
+          temperature: 0.2
+          verbose: true
+          model: 'gpt-4'
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      - name: Commit changes
+        uses: EndBug/add-and-commit@v9
+        with:
+          message: 'Project architecture review'
+          add: 'ARCHITECTURE_REVIEW.md'
+          pull: '--rebase --autostash'
 ```
 
 ### Push into Repository
