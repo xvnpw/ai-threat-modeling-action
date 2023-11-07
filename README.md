@@ -554,7 +554,7 @@ with:
 
 ## 🎉 Roadmap
 
-This project started as research of LLMs capabilities, but it improved over time beyond simple PoC. With version 1, it can be used to review documents in github using direct push, pr or issues. Further development or fixes is **not guaranteed**. If you plan to use it in your company, best to fork it and tune to your needs.
+This project started as research of LLMs capabilities, but it improved over time beyond simple PoC. With version 1, it can be used to review documents in github using direct push, pr or issues. Further development or fixes are **not guaranteed**. If you plan to use it in your company, best to fork it and tune to your needs.
 
 ## 🚀 Tech Stack
 
