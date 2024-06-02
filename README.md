@@ -49,6 +49,7 @@ Use below versions for specific models:
 | --- | --- | --- |
 | OpenAI GPT-3.5, Anthropic Claude 2 | v1.2.6.1 | ⚠️ Latest releases include prompts that might not work properly with those models |
 | OpenAI GPT-4 | Latest | 
+| Claude 3 | Latest |
 
 ## Example Outputs
 
@@ -59,6 +60,7 @@ Use below versions for specific models:
 | **OpenAI GPT-3.5** | [PROJECT.md](https://github.com/xvnpw/ai-nutrition-pro-design-gpt3.5/blob/main/PROJECT.md) | [PROJECT_SECURITY.md](https://github.com/xvnpw/ai-nutrition-pro-design-gpt3.5/blob/main/PROJECT_SECURITY.md) or as [pull request](https://github.com/xvnpw/ai-nutrition-pro-design-gpt3.5/pull/2) |
 | **Anthropic Claude 2** | [PROJECT.md](https://github.com/xvnpw/ai-nutrition-pro-design-claude2/blob/main/PROJECT.md) | [PROJECT_SECURITY.md](https://github.com/xvnpw/ai-nutrition-pro-design-claude2/blob/main/PROJECT_SECURITY.md) or as [pull request](https://github.com/xvnpw/ai-nutrition-pro-design-claude2/pull/1) |
 | **OpenAI GPT-4** | [PROJECT.md](https://github.com/xvnpw/ai-nutrition-pro-design-gpt4/blob/main/PROJECT.md) | [PROJECT_SECURITY.md](https://github.com/xvnpw/ai-nutrition-pro-design-gpt4/blob/main/PROJECT_SECURITY.md) or as [pull request](https://github.com/xvnpw/ai-nutrition-pro-design-gpt4/pull/2) |
+| **Anthropic Claude 3 Opus** | [PROJECT.md](https://github.com/xvnpw/ai-nutrition-pro-design-claude3-opus/blob/main/PROJECT.md) | [PROJECT_SECURITY.md](https://github.com/xvnpw/ai-nutrition-pro-design-claude3-opus/blob/main/PROJECT_SECURITY.md) or as [pull request](https://github.com/xvnpw/ai-nutrition-pro-design-claude3-opus/pull/2) |
 
 ### Feature: Threat Model of Architecture
 
@@ -67,6 +69,7 @@ Use below versions for specific models:
 | **OpenAI GPT-3.5** | [ARCHITECTURE.md](https://github.com/xvnpw/ai-nutrition-pro-design-gpt3.5/blob/main/ARCHITECTURE.md) | [ARCHITECTURE_SECURITY.md](https://github.com/xvnpw/ai-nutrition-pro-design-gpt3.5/blob/main/ARCHITECTURE_SECURITY.md) |
 | **Anthropic Claude 2** | [ARCHITECTURE.md](https://github.com/xvnpw/ai-nutrition-pro-design-claude2/blob/main/ARCHITECTURE.md) | [ARCHITECTURE_SECURITY.md](https://github.com/xvnpw/ai-nutrition-pro-design-claude2/blob/main/ARCHITECTURE_SECURITY.md) |
 | **OpenAI GPT-4** | [ARCHITECTURE.md](https://github.com/xvnpw/ai-nutrition-pro-design-gpt4/blob/main/ARCHITECTURE.md) | [ARCHITECTURE_SECURITY.md](https://github.com/xvnpw/ai-nutrition-pro-design-gpt4/blob/main/ARCHITECTURE_SECURITY.md) |
+| **Anthropic Claude 3 Opus** | [ARCHITECTURE.md](https://github.com/xvnpw/ai-nutrition-pro-design-claude3-opus/blob/main/ARCHITECTURE.md) | [ARCHITECTURE_SECURITY.md](https://github.com/xvnpw/ai-nutrition-pro-design-claude3-opus/blob/main/ARCHITECTURE_SECURITY.md) |
 
 ### Feature: Security Acceptance Criteria for User Story
 
@@ -75,19 +78,21 @@ Use below versions for specific models:
 | **OpenAI GPT-3.5** | [0001_STORE_DIET_INTRODUCTIONS.md](https://github.com/xvnpw/ai-nutrition-pro-design-gpt3.5/blob/main/user-stories/0001_STORE_DIET_INTRODUCTIONS.md) or [issue](https://github.com/xvnpw/ai-nutrition-pro-design-gpt3.5/issues/1) | [0001_STORE_DIET_INTRODUCTIONS_SECURITY.md](https://github.com/xvnpw/ai-nutrition-pro-design-gpt3.5/blob/main/user-stories/0001_STORE_DIET_INTRODUCTIONS_SECURITY.md) or as [issue comment](https://github.com/xvnpw/ai-nutrition-pro-design-gpt3.5/issues/1) |
 | **Anthropic Claude 2** | [0001_STORE_DIET_INTRODUCTIONS.md](https://github.com/xvnpw/ai-nutrition-pro-design-claude2/blob/main/user-stories/0001_STORE_DIET_INTRODUCTIONS.md) or [issue](https://github.com/xvnpw/ai-nutrition-pro-design-claude2/issues/2) | [0001_STORE_DIET_INTRODUCTIONS_SECURITY.md](https://github.com/xvnpw/ai-nutrition-pro-design-claude2/blob/main/user-stories/0001_STORE_DIET_INTRODUCTIONS_SECURITY.md) or as [issue comment](https://github.com/xvnpw/ai-nutrition-pro-design-claude2/issues/2) |
 | **OpenAI GPT-4** | [0001_STORE_DIET_INTRODUCTIONS.md](https://github.com/xvnpw/ai-nutrition-pro-design-gpt4/blob/main/user-stories/0001_STORE_DIET_INTRODUCTIONS.md) or [issue](https://github.com/xvnpw/ai-nutrition-pro-design-gpt4/issues/1) | [0001_STORE_DIET_INTRODUCTIONS_SECURITY.md](https://github.com/xvnpw/ai-nutrition-pro-design-gpt4/blob/main/user-stories/0001_STORE_DIET_INTRODUCTIONS_SECURITY.md) or as [issue comment](https://github.com/xvnpw/ai-nutrition-pro-design-gpt4/issues/1) |
+| **Anthropic Claude 3 Opus** | [0001_STORE_DIET_INTRODUCTIONS.md](https://github.com/xvnpw/ai-nutrition-pro-design-claude3-opus/blob/main/user-stories/0001_STORE_DIET_INTRODUCTIONS.md) or [issue](https://github.com/xvnpw/ai-nutrition-pro-design-claude3-opus/issues/1) | [0001_STORE_DIET_INTRODUCTIONS_SECURITY.md](https://github.com/xvnpw/ai-nutrition-pro-design-claude3-opus/blob/main/user-stories/0001_STORE_DIET_INTRODUCTIONS_SECURITY.md) or as [issue comment](https://github.com/xvnpw/ai-nutrition-pro-design-claude3-opus/issues/1) |
 
 ### Feature: Review of input file
 
 | Model | Input | Output | 
 | --- | --- | --- |
 | **OpenAI GPT-4** | [ARCHITECTURE.md](https://github.com/xvnpw/ai-nutrition-pro-design-gpt4/blob/main/ARCHITECTURE.md) | [ARCHITECTURE_REVIEW.md](https://github.com/xvnpw/ai-nutrition-pro-design-gpt4/blob/main/ARCHITECTURE_REVIEW.md) |
+| **Anthropic Claude 3 Opus** | [ARCHITECTURE.md](https://github.com/xvnpw/ai-nutrition-pro-design-claude3-opus/blob/main/ARCHITECTURE.md) | [ARCHITECTURE_REVIEW.md](https://github.com/xvnpw/ai-nutrition-pro-design-claude3-opus/blob/main/ARCHITECTURE_REVIEW.md) |
 
 ## Inputs
 
 Add a step like this to your workflow:
 
 ```yaml
-- uses: xvnpw/ai-threat-modeling-action@v1.3.1 # You can change this to use a specific version.
+- uses: xvnpw/ai-threat-modeling-action@v1.3.4 # You can change this to use a specific version.
   with:
     # Type of feature, one of: project, architecture, user-story
     # Default: ''
@@ -212,7 +217,7 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v3
       - name: Generate project security requirements
-        uses: xvnpw/ai-threat-modeling-action@v1.3.1
+        uses: xvnpw/ai-threat-modeling-action@v1.3.4
         with:
           type: 'project'
           input_files: '["PROJECT.md"]'
@@ -259,7 +264,7 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v3
       - name: Generate architecture threat model
-        uses: xvnpw/ai-threat-modeling-action@v1.3.1
+        uses: xvnpw/ai-threat-modeling-action@v1.3.4
         with:
           type: 'architecture'
           input_files: '["ARCHITECTURE.md"]'
@@ -338,7 +343,7 @@ jobs:
         run: |
           echo "${{ steps.files_check.outputs.all }}"
       - name: Generate user story security acceptance criteria
-        uses: xvnpw/ai-threat-modeling-action@v1.3.1
+        uses: xvnpw/ai-threat-modeling-action@v1.3.4
         with:
           type: 'user-story'
           input_files: "${{ steps.files_check.outputs.all }}"
@@ -408,7 +413,7 @@ jobs:
             });
             return JSON.stringify(body);
       - name: Generate user story security acceptance criteria
-        uses: xvnpw/ai-threat-modeling-action@v1.3.1
+        uses: xvnpw/ai-threat-modeling-action@v1.3.4
         with:
           type: 'user-story'
           input_files: '["issue_body.md"]'
@@ -462,7 +467,7 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v3
       - name: Generate architecture review
-        uses: xvnpw/ai-threat-modeling-action@v1.3.1
+        uses: xvnpw/ai-threat-modeling-action@v1.3.4
         with:
           type: 'architecture' # will create threat model
           input_files: 'ARCHITECTURE.md'
@@ -544,7 +549,7 @@ cd <target-repo>/templates
 In workflow file add:
 
 ```yaml
-uses: xvnpw/ai-threat-modeling-action@v1.3.1
+uses: xvnpw/ai-threat-modeling-action@v1.3.4
 with:
   ...
   templates_dir: './templates'
